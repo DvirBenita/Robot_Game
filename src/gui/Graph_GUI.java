@@ -12,10 +12,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
-
 import java.io.File;
 import java.io.FilenameFilter;
-import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -34,10 +32,8 @@ import dataStructure.edge_data;
 import dataStructure.graph;
 import dataStructure.node_data;
 import utils.Point3D;
-import utils.fruit;
 import utils.nodeData;
-import utils.edgeData;
-import utils.Range;
+
 public class Graph_GUI extends JFrame implements ActionListener,MouseListener{
 
 	private graph Graph;
@@ -49,8 +45,6 @@ public class Graph_GUI extends JFrame implements ActionListener,MouseListener{
 	private JFrame f;
 	private Graphics g;
 	private int mc;
-	
-
 
 
 	/**
@@ -80,14 +74,14 @@ public class Graph_GUI extends JFrame implements ActionListener,MouseListener{
 
 		menu.add(m);
 		menu.add(algo);
-
+		
 		this.setMenuBar(menu);
-		RandomL(800, 550);
+		RandomL(800, 650);
 		MenuItem save = new MenuItem("Save");
 		MenuItem open = new MenuItem("Open File");
 		MenuItem isConnect= new MenuItem("isConnected");
 		addMouseListener(this);
-
+		
 		MenuItem ShotDist = new MenuItem("shortestPathDist");
 		MenuItem shortPath = new MenuItem("shortestPath");
 		MenuItem TSP = new MenuItem("TSP");
@@ -108,66 +102,13 @@ public class Graph_GUI extends JFrame implements ActionListener,MouseListener{
 		initThread();
 	}
 	/**
-	 * 
-	 * @param data denote some data to be scaled
-	 * @param r_min the minimum of the range of your data
-	 * @param r_max the maximum of the range of your data
-	 * @param t_min the minimum of the range of your desired target scaling
-	 * @param t_max the maximum of the range of your desired target scaling
-	 * @return
-	 */
-	private double scale(double data, double r_min, double r_max, 
-			double t_min, double t_max)
-	{
-
-		double res = ((data - r_min) / (r_max-r_min)) * (t_max - t_min) + t_min;
-		return res;
-	}
-	private void RandomL(int i, int j) {
-
-		Range ra[] = range();
-		
-		for(node_data n: this.Graph.getV()) {
-			Point3D p = n.getLocation();
-			double x = scale(p.x(),ra[0].get_min(),ra[0].get_max(),50,i-50);
-			double y = scale(p.y(),ra[1].get_min(),ra[1].get_max(),70,j-70);
-
-			n.setLocation(new Point3D(x+100,y+100,0));
-		}
-
-	}
-	
-	private Range[] range() {
-	 double min_x=Double.POSITIVE_INFINITY;
-	 double max_x=Double.NEGATIVE_INFINITY;
-	 double min_y=Double.POSITIVE_INFINITY;
-	 double max_y=Double.NEGATIVE_INFINITY;
-		for(node_data n: this.Graph.getV()) {
-			Point3D p = n.getLocation();
-			Range ra[]= new Range[2];
-			min_x = Math.min(min_x, p.x());
-			max_x = Math.max(max_x, p.x());
-			min_y = Math.min(min_y, p.y());
-			max_y = Math.max(max_y, p.y());
-		}
-		Range ra[] = new Range[2];
-		ra[0] = new Range(min_x,max_x);
-		ra[1] = new Range(min_y,max_y);	
-		return ra;
-		
-
-
-
-	}
-
-	/**
 	 * Function to draw the graph on the JFrame
 	 */
 	public void paint(Graphics g) {
 		try {
 			super.paint(g);
 			this.g=g;
-			for(node_data n : this.Graph.getV()) {//////chek in the end about getV
+			for(node_data n : this.Graph.getV()) {
 				g.setColor(Color.BLUE);
 				int x =n.getLocation().ix();
 				int y = n.getLocation().iy();
@@ -189,24 +130,7 @@ public class Graph_GUI extends JFrame implements ActionListener,MouseListener{
 							g.setFont(new Font("Arial", Font.BOLD, 10));
 							g.drawLine(x+5, y+5,x1+5, y1+5);
 							g.setColor(Color.RED);
-							DecimalFormat df2 = new DecimalFormat("#.##");
-							x1=(int)((((x+x1)/2+x1)/2+x1)/2+x1)/2;
-							y1=(int)((((y+y1)/2+y1)/2+y1)/2+y1)/2;
-							
-							if(((edgeData)edge).getF()!=null) {
-
-								g.setColor(Color.BLUE);
-								x1=(int)((((x+x1)/2+x1)/2+x1)/2+x1)/2;
-								y1=(int)((((y+y1)/2+y1)/2+y1)/2+y1)/2;
-								if(((edgeData)edge).getF().getType()==1){
-									g.setColor(Color.YELLOW);
-								}else {
-									g.setColor(Color.CYAN);
-								}
-
-								g.fillOval((int)(x+x1)/2-3,(int)((y+y1)/2-3), 4, 15);
-								g.setColor(Color.RED);
-							}
+							g.drawString(""+edge.getWeight(), (int)(x+x1)/2-3,(int)((y+y1)/2-3));
 							g.setColor(Color.RED);
 							x1=(int)((((x+x1)/2+x1)/2+x1)/2+x1)/2;
 							y1=(int)((((y+y1)/2+y1)/2+y1)/2+y1)/2;
@@ -215,6 +139,7 @@ public class Graph_GUI extends JFrame implements ActionListener,MouseListener{
 					}
 				}
 			}
+
 
 
 
@@ -386,9 +311,34 @@ public class Graph_GUI extends JFrame implements ActionListener,MouseListener{
 		return s;
 
 	}
+	/**
+	 * Random location to vertex
+	 * @param height
+	 * @param width
+	 */
+	public void RandomL(int height, int width) {
 
+		for (node_data n : Graph.getV()) {
+			double x = Math.random() * (width+100)+100;
+			double y = (Math.random() * (height)-40);
+			if((x>60)&&(y>100&&y<height-200)) {
+				n.setLocation(new Point3D(x, y));
+			}else {
+				if(!(x>60)) {
+					x+=60;
+				}
+				if(!(y>100)) {
+					y+=100;
+				}
+				if(!(y<height-200)) {
+					y=y-250;
+				}
 
+				n.setLocation(new Point3D(x, y));
+			}
 
+		}
+	}
 	/**
 	 * Override action listener function , to listen the menu clicks
 	 */
@@ -520,7 +470,7 @@ public class Graph_GUI extends JFrame implements ActionListener,MouseListener{
 			g.drawString("Invaild input",30,620);
 		}
 	}
-
+	
 
 
 	private void initThread() {

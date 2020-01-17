@@ -2,12 +2,10 @@ package dataStructure;
 
 
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import utils.edgeData;
-import utils.fruit;
 import utils.nodeData;
 
 
@@ -18,44 +16,6 @@ public class DGraph implements graph,Serializable {
 	private LinkedHashMap<Integer,node_data> vertex ;
 	private LinkedHashMap<Integer,LinkedHashMap<Integer,edge_data>> E;
 	private int change;
-	private ArrayList<fruit> fruits;
-	double EPSILON = 0.0001;
-	public ArrayList<fruit> getFruits() {
-		return fruits;
-	}
-	public void  setFruit(ArrayList<fruit> f) {
-		
-		fruits =f;
-		for(edge_data n :edges.values()) {
-			node_data src = vertex.get(n.getSrc());
-			node_data dest = vertex.get(n.getDest());
-			for(fruit f1 : fruits) {
-				double withFriut =(Math.abs(distance(f1,src))+Math.abs(distance(f1,dest)));
-				double withoutFruit = Math.abs(distance(src,dest));
-				if((withFriut-withoutFruit)<EPSILON) {
-					((edgeData)n).setF(f1);
-					
-				}
-			}
-		}
-		change++;
-	}
-	private double distance(fruit f1 , node_data n) {
-			double y= n.getLocation().y();
-			double y1= f1.getPos()[1];
-			double x=n.getLocation().x();
-			double x1 = f1.getPos()[0];
-			double dis = (y-y1)*(y-y1)+(x-x1)*(x-x1);
-			return Math.sqrt(dis);
-	}
-	private double distance(node_data src,node_data dest) {
-		double y = (dest.getLocation().y());
-		double y1 = src.getLocation().y();
-		double x = dest.getLocation().x();
-		double x1 = src.getLocation().x();
-		double dis = (y-y1)*(y-y1)+(x-x1)*(x-x1);
-		return Math.sqrt(dis);
-	}
 	/**
 	 * Constructors
 	 */
@@ -65,7 +25,6 @@ public class DGraph implements graph,Serializable {
 		this.E= new LinkedHashMap<Integer, LinkedHashMap<Integer,edge_data>>();
 		this.change = Integer.MAX_VALUE;
 	}
-	
 	public DGraph(int vert) {
 		this();
 		for (int i = 1; i <= vert; i++) {
@@ -73,20 +32,7 @@ public class DGraph implements graph,Serializable {
 			this.addNode(n);
 		}
 	}
-//	/**
-//	 * Creates a shallow copied graph
-//	 * @param edges2
-//	 * @param vertex2
-//	 * @param e2
-//	 * @param change2
-//	 */
-//	public DGraph(LinkedHashMap<String, edge_data> edges2, LinkedHashMap<Integer, node_data> vertex2,
-//			LinkedHashMap<Integer, LinkedHashMap<Integer, edge_data>> e2, int change2) {
-//		this.edges=edges2;
-//		this.vertex=vertex2;
-//		this.E=e2;
-//		this.change = change2;
-//	}
+
 	/**
 	 * Deep copy constructor;
 	 * @param edges
@@ -245,6 +191,9 @@ public class DGraph implements graph,Serializable {
 		}catch(Exception e) {
 			return null;
 		}
+	}
+	public void setChange() {
+		this.setChange(this.change+1);
 	}
 	/**
 	 * Remove edge from graph

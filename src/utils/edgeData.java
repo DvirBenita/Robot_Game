@@ -15,15 +15,7 @@ public class edgeData implements edge_data,Serializable{
 	private double weight;
 	private String info;
 	private int tag;
-	private fruit f;
-	public fruit getF() {
-		return f;
-	}
-
-	public void setF(fruit f) {
-		this.f = f;
-	}
-
+	
 	/**
 	 * Consrtuctors to edge data
 	 * @param src
@@ -35,11 +27,9 @@ public class edgeData implements edge_data,Serializable{
 		this.src=src;
 		this.dest=dest;
 		this.weight=w;
-		this.f=null;
 		}else {
 			System.out.println("cannot init negative weight");
 		}
-		
 	}
 	
 	public edgeData(node_data n1,node_data dest,double w) {
@@ -47,11 +37,9 @@ public class edgeData implements edge_data,Serializable{
 		this.src=n1.getKey();
 		this.dest=dest.getKey();
 		this.weight=w;
-		this.f=null;
 		}else {
 			System.out.println("cannot init negative weight");
 		}
-		
 	}
 	/**
 	 * Init this edge with another edge
