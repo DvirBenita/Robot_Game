@@ -4,10 +4,13 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 import javax.imageio.ImageIO;
 
 import org.json.JSONObject;
+
+
 
 import Server.game_service;
 import dataStructure.DGraph;
@@ -19,6 +22,7 @@ import gameClient.Fruit_Comp;
 import gameClient.KML_Logger;
 import gameClient.Robot;
 import utils.Point3D;
+import utils.nodeData;
 
 public class Game_Algo {
 	private ArrayList<Fruit> fruits;
@@ -170,49 +174,49 @@ public class Game_Algo {
 
 	}
 	
-	public void moveRobotsAuto(game_service game, graph g) {
-		graph_algo.init(g);
-		synchronized (robotList) {
-			for (Robot r : robotList) {
-				int i = 0;
-				boolean found = false;
-				while (!found) {
-					Fruit f = fruitList.get(i);
-					if (f.isOnTarget()) {
-						i++;
-						continue;
-					}
-					edge_data e = f.getEdge();
-					int src = r.getSrc();
-					int dest = -1;
-					int last = -1;
-					if (f.getType() == -1) {
-						dest = e.getDest() > e.getSrc() ? e.getSrc() : e.getDest();
-						last = e.getDest() > e.getSrc() ? e.getDest() : e.getSrc();
-					}
-					if (f.getType() == 1) {
-						dest = e.getDest() > e.getSrc() ? e.getDest() : e.getSrc();
-						last = e.getDest() > e.getSrc() ? e.getSrc() : e.getDest();
-					}
-					List<node_data> path = graph_algo.shortestPath(src, dest);
-					path.add(new Node(last));
-					if (path != null && path.size() > 1) {
-						moveByPath(r.getId(), path, game);
-						f.setOnTarget(true);
-						found = true;
-						continue;
-					} else {
-						i++;
-					}
-					if (i == fruitList.size()) {
-						found = true;
-						continue;
-					}
-				}
-				i++;
-			}
-		}
-	}
+//	public void moveRobotsAuto(game_service game, graph g) {
+//		ga.init(g);
+//		synchronized (robots) {
+//			for (Robot r : robots) {
+//				int i = 0;
+//				boolean found = false;
+//				while (!found) {
+//					Fruit f = fruits.get(i);
+//					if (f.isOnTarget()) {
+//						i++;
+//						continue;
+//					}
+//					edge_data e = f.getEdg();
+//					int src = r.getSrc();
+//					int dest = -1;
+//					int last = -1;
+//					if (f.getType() == -1) {
+//						dest = e.getDest() > e.getSrc() ? e.getSrc() : e.getDest();
+//						last = e.getDest() > e.getSrc() ? e.getDest() : e.getSrc();
+//					}
+//					if (f.getType() == 1) {
+//						dest = e.getDest() > e.getSrc() ? e.getDest() : e.getSrc();
+//						last = e.getDest() > e.getSrc() ? e.getSrc() : e.getDest();
+//					}
+//					List<node_data> path = ga.shortestPath(src, dest);
+//					path.add(new nodeData(last));
+//					if (path != null && path.size() > 1) {
+//						moveByPath(r.getId(), path, game);
+//						f.setOnTarget(true);
+//						found = true;
+//						continue;
+//					} else {
+//						i++;
+//					}
+//					if (i == fruits.size()) {
+//						found = true;
+//						continue;
+//					}
+//				}
+//				i++;
+//			}
+//		}
+//	}
 	public void update(game_service game,graph g,KML_Logger km) {
 
 		this.robots= new ArrayList<Robot>();

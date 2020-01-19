@@ -148,7 +148,7 @@ public class MyGameGUI extends JFrame implements ActionListener,MouseListener{
 					for (Robot robot : Arena.getGame_center().getGame_algo().getRobots()) {
 
 						try {
-							BufferedImage im = ImageIO.read(new File("robot.png"));
+							BufferedImage im = ImageIO.read(new File("robo1.png"));
 							int x1 = (int) scale(robot.getPos()[0].x(),ra[0].get_min(),ra[0].get_max(),50,i-50);
 							int y1 = (int) scale(robot.getPos()[0].y(),ra[1].get_min(),ra[1].get_max(),70,j-70);
 							grr.drawImage(im, x1 - 15, y1 - 15, null);
