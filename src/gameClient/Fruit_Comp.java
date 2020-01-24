@@ -4,22 +4,25 @@ import java.util.Comparator;
 
 public class Fruit_Comp implements Comparator<Fruit> {
 
-	
-	public Fruit_Comp() {
-		
+	Robot r;
+	public Fruit_Comp(Robot r) {
+		this.r=r;
 	}
 	/**
 	 * compare between 2 fruits by value
 	 */
 	@Override
 	public int compare(Fruit o1, Fruit o2) {
+
 		
-		if( o1.getVal()-o2.getVal()<0) {
-			return (int) (o1.getVal()-o2.getVal()-1);
-		}else if(o1.getVal()-o2.getVal()>0) {
-			return (int) (o1.getVal()-o2.getVal()+1);
+		if(r.getPos()[0].distance2D(o1.getPos()[0])<r.getPos()[0].distance2D(o2.getPos()[0])){
+			return -1;
+		}else if(r.getPos()[0].distance2D(o1.getPos()[0])>r.getPos()[0].distance2D(o2.getPos()[0])) {
+			return 1;
 		}
 		return 0;
+	
+		
 		
 		
 	}

@@ -34,14 +34,18 @@ public class Game_Center  implements Runnable {
 	}
 
 	public Game_Center(int scenario) {
+
+
 		km = new KML_Logger(scenario);
 		graph= new DGraph();
+		int id = 209313238;
+		//Game_Server.login(id);
 		game = Game_Server.getServer(scenario);
 		this.jsonFileRead(graph,game);
 		game_algo = new Game_Algo();
-		game_algo.fillFruit(game, graph,km);
 		game_algo.fillRobots(game, graph,km);
-
+		game_algo.fillFruit(game, graph,km);
+		
 
 
 	}
@@ -120,7 +124,11 @@ public class Game_Center  implements Runnable {
 			game.startGame();
 
 			while(game.isRunning()) {
-
+				
+				
+				if(!this.isManual()) {
+					game_algo.moveRobotsAuto(game, graph);
+				}
 				game_algo.update(game,this.graph,km);
 				game.move();
 				Thread.sleep(50);
@@ -128,6 +136,7 @@ public class Game_Center  implements Runnable {
 
 			}
 			km.done();
+			game.sendKML(km.KML.toString());
 
 
 

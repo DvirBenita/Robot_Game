@@ -6,6 +6,8 @@ import dataStructure.edge_data;
 import utils.Point3D;
 
 public class Fruit {
+	
+	
 
 	public Point3D[] getPos() {
 		return pos;
@@ -43,6 +45,15 @@ public class Fruit {
 	private int type;
 	private double val;
 	private edge_data edg;
+	private  boolean isOnTarget=false;
+
+	public boolean isOnTarget() {
+		return isOnTarget;
+	}
+
+	public void setOnTarget(boolean isOnTarget) {
+		this.isOnTarget = isOnTarget;
+	}
 
 	public Fruit() {
 

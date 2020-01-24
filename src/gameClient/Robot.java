@@ -1,10 +1,12 @@
 package gameClient;
 
+import java.util.Comparator;
+
 import org.json.JSONObject;
 
 import utils.Point3D;
 
-public class Robot {
+public class Robot implements Comparator<Fruit> {
 
 
 	private double value,speed;
@@ -84,6 +86,20 @@ public class Robot {
 
 	public void setPos(Point3D[] pos) {
 		this.pos = pos;
+	}
+
+	@Override
+	public int compare(Fruit o1, Fruit o2) {
+		
+		final double VALP = 0.2;
+		final double DISP=0.8;
+		
+		double f1 = o1.getVal()-this.pos[0].distance2D(o1.getPos()[0]);
+		double f2 = o2.getVal() - this.pos[0].distance2D(o2.getPos()[0]);
+		
+		return (int) (this.pos[0].distance2D(o1.getPos()[0])-this.pos[0].distance2D(o2.getPos()[0])) ;
+		
+		
 	}
 
 

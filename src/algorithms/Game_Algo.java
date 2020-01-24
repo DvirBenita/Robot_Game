@@ -28,8 +28,11 @@ public class Game_Algo {
 	private ArrayList<Fruit> fruits;
 	private ArrayList<Robot> robots;
 	private Graph_Algo ga;
-	public static final Fruit_Comp CMP = new Fruit_Comp();
+	private Robot currentRobot = null;
 	
+	private graph_algorithms graph_algo = new Graph_Algo();
+	private int j;
+
 
 
 	public Game_Algo(){
@@ -62,12 +65,12 @@ public class Game_Algo {
 		synchronized (robots) {
 			try {
 
-				
+
 				for(int i=0;i<robotSum(game);i++) {
 					if(fruits.size()>i) {
-						
+
 						game.addRobot(this.fruits.get(i).getEdg().getSrc());
-						
+
 					}else {
 						game.addRobot(i%graph.nodeSize());
 					}
@@ -98,6 +101,93 @@ public class Game_Algo {
 				robots.add(r);
 			}
 		}
+
+	}
+
+
+
+	public void moveRobotsAuto(game_service game, graph g) {
+
+		graph_algo.init(g);
+		synchronized (robots) {
+
+
+
+
+			for(Robot r:robots) {
+				currentRobot=r;
+
+				int i=0;
+				boolean found =false;
+
+				
+				
+
+
+
+
+				while(!found) {
+
+					Fruit f = fruits.get(i);
+
+					if(f.isOnTarget()) {
+						i++;
+						continue;
+					}
+
+					edge_data eg = f.getEdg();
+					int src = r.getSrc();
+					int dest = -1;
+					int last = -1;
+					if (f.getType() == -1) {
+						dest = eg.getDest() > eg.getSrc() ? eg.getSrc() : eg.getDest();
+						last = eg.getDest() > eg.getSrc() ? eg.getDest() : eg.getSrc();
+					}
+					if (f.getType() == 1) {
+						dest = eg.getDest() > eg.getSrc() ? eg.getDest() : eg.getSrc();
+						last = eg.getDest() > eg.getSrc() ? eg.getSrc() : eg.getDest();
+					}
+					List<node_data> path = graph_algo.shortestPath(r.getSrc(), dest);
+
+					if(path!=null&&path.size()>1) {
+						path.add(new nodeData(last));
+						f.setOnTarget(true);
+						found=true;
+						moveByPath(r.getId(),path,game);
+					}else {
+						i++;
+					}
+
+					if(i==fruits.size()) {
+						found =true;
+						continue;
+					}	
+
+
+				}
+			}
+
+		}
+
+	}
+
+
+
+
+	public void moveByPath(int rid, List<node_data> path, game_service game) {
+		for (int i = 1; i < path.size(); i++) {
+			node_data n = path.get(i);
+			game.chooseNextEdge(rid, n.getKey());
+		}
+	}
+	public void moveByPathsd(Robot r, List<node_data> path, game_service game) {
+
+		for(int i=0;i<path.size();i++) {
+
+			game.chooseNextEdge(r.getId(), path.get(i).getKey());
+
+		}
+
 
 	}
 	private int robotSum(game_service game) {
@@ -168,55 +258,14 @@ public class Game_Algo {
 				}
 
 			}
+			if(currentRobot!=null) {
+			fruits.sort(new Fruit_Comp(currentRobot));
+			}
 
-			fruits.sort(CMP);
 		}
 
 	}
-	
-//	public void moveRobotsAuto(game_service game, graph g) {
-//		ga.init(g);
-//		synchronized (robots) {
-//			for (Robot r : robots) {
-//				int i = 0;
-//				boolean found = false;
-//				while (!found) {
-//					Fruit f = fruits.get(i);
-//					if (f.isOnTarget()) {
-//						i++;
-//						continue;
-//					}
-//					edge_data e = f.getEdg();
-//					int src = r.getSrc();
-//					int dest = -1;
-//					int last = -1;
-//					if (f.getType() == -1) {
-//						dest = e.getDest() > e.getSrc() ? e.getSrc() : e.getDest();
-//						last = e.getDest() > e.getSrc() ? e.getDest() : e.getSrc();
-//					}
-//					if (f.getType() == 1) {
-//						dest = e.getDest() > e.getSrc() ? e.getDest() : e.getSrc();
-//						last = e.getDest() > e.getSrc() ? e.getSrc() : e.getDest();
-//					}
-//					List<node_data> path = ga.shortestPath(src, dest);
-//					path.add(new nodeData(last));
-//					if (path != null && path.size() > 1) {
-//						moveByPath(r.getId(), path, game);
-//						f.setOnTarget(true);
-//						found = true;
-//						continue;
-//					} else {
-//						i++;
-//					}
-//					if (i == fruits.size()) {
-//						found = true;
-//						continue;
-//					}
-//				}
-//				i++;
-//			}
-//		}
-//	}
+
 	public void update(game_service game,graph g,KML_Logger km) {
 
 		this.robots= new ArrayList<Robot>();

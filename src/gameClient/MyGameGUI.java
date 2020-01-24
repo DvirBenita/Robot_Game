@@ -15,6 +15,11 @@ import java.awt.event.MouseListener;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 
 import javax.imageio.ImageIO;
@@ -45,7 +50,9 @@ public class MyGameGUI extends JFrame implements ActionListener,MouseListener{
 	private boolean manual;
 	private static boolean chooseRobot=true;
 	private Robot tempRobot=null;
-
+	public static final String jdbcUrl="jdbc:mysql://db-mysql-ams3-67328-do-user-4468260-0.db.ondigitalocean.com:25060/oop?useUnicode=yes&characterEncoding=UTF-8&useSSL=false";
+	public static final String jdbcUser="student";
+	public static final String jdbcUserPassword="OOP2020student";
 
 	public MyGameGUI()  {
 		Arena = new Arena();
@@ -69,7 +76,10 @@ public class MyGameGUI extends JFrame implements ActionListener,MouseListener{
 		menu.add(m);
 
 		MenuItem scenario = new MenuItem("Scenario");
+		MenuItem a = new MenuItem("a");
 		m.add(scenario);
+		m.add(a);
+		a.addActionListener(this);
 		scenario.addActionListener(this);
 		this.addMouseListener(this);
 		this.setMenuBar(menu);
@@ -434,7 +444,7 @@ public class MyGameGUI extends JFrame implements ActionListener,MouseListener{
 					while(Arena.getGame_center().getGame().isRunning()) {
 
 					}
-
+					
 					repaint();
 				}
 			});
@@ -462,10 +472,55 @@ public class MyGameGUI extends JFrame implements ActionListener,MouseListener{
 
 
 
+		}else if(s.equals("a")) {
+			
+			
+			int numGame =howManyGame();
+			
+			
+			
 		}
 
 
 
 
+	}
+
+
+
+
+
+
+
+	private int howManyGame() {
+		
+		
+		int ans = 0;
+		final int MY_ID =209313238; 
+		String allCustomersQuery = "SELECT * FROM Users where userID="+MY_ID+";";
+		try {
+			Class.forName("com.mysql.jdbc.Driver");
+			Connection connection = 
+			DriverManager.getConnection(jdbcUrl, jdbcUser, jdbcUserPassword);		
+			Statement statement = connection.createStatement();
+			ResultSet resultSet = statement.executeQuery(allCustomersQuery);
+			while(resultSet.next()) {
+				ans++;
+			}
+			return ans;
+		}
+		catch (SQLException sqle) {
+			System.out.println("SQLException: " + sqle.getMessage());
+			System.out.println("Vendor Error: " + sqle.getErrorCode());
+		}
+		
+		catch (ClassNotFoundException e) {
+			e.printStackTrace();
+		}
+		return 0;
+		
+		
+		
+		
 	}
 }
