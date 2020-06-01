@@ -1,4 +1,4 @@
-**<h1>Ariel OOP - Ex2 The Maze of Waze</h1>**
+**<h1>Ariel OOP </h1>**
 ***
 <img src="https://i.imgur.com/nHA5kss.png" alt="Untitled" border="0"/><br /><br/>
 level 23.
